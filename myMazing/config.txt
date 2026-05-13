@@ -1,0 +1,31 @@
+WIDTH=33
+           HEIgHT= 33                                   
+EnTRY=0,1
+  EXIT=            32,27
+PERFECT=   FaLsE    		
+OUTPUT_FILE    =__maze.txt
+
+SEED= -1
+
+
+# 22 - 7 = 15 / 2 = 7
+# (width - 7) / 2 = middle;
++---------------------+
+|          			  |
+|
+|        
+|
+|		*   ***
+|		* *   *
+|		*** ***
+|		  * *
+|		  * ***
+|
+|
+|int pat_h = 5;
+|int pat_w = 7;
++--------------------_+
+#int start_x = (p->width  - pat_w) / 2;
+#int start_y = (p->height - pat_h) / 2;
+
+#grid[start_x][start_y].c_type = 42;

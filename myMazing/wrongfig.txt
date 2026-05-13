@@ -1,0 +1,49 @@
+WIDTH        =  22SFFff
+    HEIgHT	=     22    !                                
+	EnTRy=0,1
+  EXiT=            21,21   
+PERFECT=   FaLsE    		
+OUTPUT_FILE    =__maze.txt
+
+SEED= 777
+
+
+# 22 - 7 = 15 / 2 = 7
+# (width - 7) / 2 = middle;
++---------------------+
+|          			  |
+|
+|        
+|
+|		*   ***
+|		* *   *
+|		*** ***
+|		  * *
+|		  * ***
+|
+|
+|int pat_h = 5;
+|int pat_w = 7;
++--------------------_+
+int start_x = (p->width  - pat_w) / 2;
+int start_y = (p->height - pat_h) / 2;
+
+#grid[start_x][start_y].c_type = 42;
+
+    if (strcasestr(key_str, "WIDTH") && params->width <= 0)
+        process_int(params, key_str, 'w');
+    else if (strcasestr(key_str, "HEIGHT") && params->height <= 0)
+        process_int(params, key_str, 'h');
+    else if (strcasestr(key_str, "EXIT") && params->exit[0] <= 0)
+        process_int(params, key_str, 'x');
+    else if (strcasestr(key_str, "ENTRY") && params->entry[0] <= 0)
+        process_int(params, key_str, 'n');
+    else if (strcasestr(key_str, "SEED") && params->seed <= 0)
+        process_int(params, key_str, 's');
+    else if (strcasestr(key_str, "PERFECT"))
+        return (process_str(params, key_str, 'p'));
+    else if (strcasestr(key_str, "OUTPUT_FILE")
+             && params->output_file == NULL)
+        return (process_str(params, key_str, 'o'));
+
+    return (0);
