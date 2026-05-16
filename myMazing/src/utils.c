@@ -1,6 +1,6 @@
 #include "utils.h"
 
-int	error_check(t_param *p)
+int	error_check(t_param *p, t_cell grid[][p->height])
 {	//maze too small(non-crit)
 	//output file check
 	//Empty+Negative check;
@@ -15,9 +15,13 @@ int	error_check(t_param *p)
 	//Entry == Exit
 	if (p->entry[0] == p->exit[0] && p->entry[1] == p->exit[1])
 		return 3;
-	if (!p->output_file|| strlen(p->output_file) == 0)
+	if (!p->output_file || strlen(p->output_file) == 0)
 		return 4;
-	if (p->width < 7 || p->height < 5) return 5;
+	if (grid)
+		if (grid[p->entry[0]][p->entry[1]].c_type == 2
+		|| grid[p->exit[0]][p->exit[1]].c_type == 2)
+		return 5;
+	//if (p->width < 7 || p->height < 5) return 6;
 
 	return FALSE;	
 }
@@ -30,7 +34,8 @@ void	ft_perror(int num)
     [2] = "ERROR: Exit/Entry out of bounds.",
     [3] = "ERROR: Exit == Entry. (Must be different).", 
 	[4] = "ERROR: Empty OUTPUT_FILE name.",
-    [5] = "Achtung: Maze too small for '42' patern;",
+    [5] = "ERROR: Entry/Exit is on 42_pattern cell. ",
+	//[6] = "Achtung: Maze too small for '42' patern;",
 	};
 	if (num)
 		printf("%s\n", error_message[num]);

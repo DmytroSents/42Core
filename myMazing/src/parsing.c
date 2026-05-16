@@ -54,7 +54,7 @@ int process_line(t_param *params, char *buffer)
         return (process_int(params, key_str, 'x'));
     else if (strcasestr(key_str, "ENTRY") && params->entry[0] <= 0)
         return (process_int(params, key_str, 'e'));
-    else if (strcasestr(key_str, "SEED") && params->seed != 0)
+    else if (strcasestr(key_str, "SEED"))
         return (process_int(params, key_str, 's'));
     else if (strcasestr(key_str, "PERFECT"))
         return (process_str(params, key_str, 'p'));
@@ -191,7 +191,6 @@ int process_int(t_param *p, char *key_s, char flag_c)
             write(2, equal_sign + 1, strlen(equal_sign) - 1);
             return (-1);
         }
-
         value[0] = atoi(equal_sign + 1);
         if (flag_c == 'w')
             p->width = value[0];

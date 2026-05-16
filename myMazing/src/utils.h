@@ -17,8 +17,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct params
-{
+typedef struct params {
     int		width;
     int		height;
     int		exit[2];
@@ -26,18 +25,42 @@ typedef struct params
 	bool	perfect;
 	int		seed;
 	char	*output_file;
-}		t_param;
+}	t_param;
 
-typedef struct cell
-{
-	uint8_t		walls;
-	char		c_type;
-	//bool		visited;
-}		t_cell;
+typedef struct cell  {
+	uint8_t		walls; // unsigned int 8 bit 00000000
+	uint8_t		c_type; //coz <bool> is not enough
+}	t_cell;
+
+enum c_Types {
+    NOTHING = 0,
+    ENTRY_X = 1,
+    PATTERN = 2,
+    VISITED = 3,
+	PATH_SHRT = 4, 
+};
+
+
+//(re)used for both: generation and pathfinding;
+typedef struct  {
+	uint16_t 	x;
+	uint16_t	y;
+	char 	  dir;//for Path
+}	t_way;
+	
+//not Dynamik but Array!
+typedef struct stack {
+	size_t 	 first; //for queue.pop()
+	size_t	 count;
+	t_way  *path_t; // ->t_way{x,y}
+	size_t capacity;
+}	t_stack; //same struct for both algo
+
 
 void	ft_perror(int num);
-int		error_check(t_param *p);
+
 void	print_struct(t_param *p);
+int		error_check(t_param *p, t_cell grid[][p->height]);
 
 int 	txt_to_struct(int argc, char *argv[], t_param *p);
 
@@ -49,10 +72,9 @@ char	*strcasestr(const char *haystack, const char *needle);
 
 int 	maze_tofile(t_param *p, t_cell grid[][p->height]);
 
-//for Human version of visuals For MLX
-static inline int inv_y(t_param *p, int y)
-		{	return (p->height - 1 - y);	 }
 
-
+//for Human version of visuals in MLX
+static inline int inv_y( t_param *p, int y)
+/*Not implemented yet*/{ return (p->height - 1 - y);	 }
 
 #endif
