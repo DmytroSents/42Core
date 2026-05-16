@@ -9,12 +9,6 @@ int DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height])
 	uint16_t  x = (uint16_t)p->entry[0];
 	uint16_t  y = (uint16_t)p->entry[1];
 
-
-	stack->capacity = p->width * p->height;
-	stack->path_t = calloc(stack->capacity, sizeof(t_way));
-	if (!stack->path_t)
-		return (printf("Out of mem!\n"), -1);
-
 	push(stack, x, y); //_init_
 	while (stack->count > 0)
 	{
@@ -24,11 +18,9 @@ int DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height])
 		if (direct)	   // 'N' 'E' 'S' 'W'
 			move_direct(direct, stack, p, grid);
 		else
-			pop(stack);
+			pop_last(stack);
 		//x = current->x;  y = current->y;
 	}
-
-	grid[p->exit[0]][p->exit[1]].c_type = ENTRY_X;
 	
 	if (p->perfect == FALSE)
 		make_imperfect(stack, p, grid); 
@@ -60,7 +52,7 @@ void make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height])
 	}
 
 	//rand_count = stk->count - 1; == 99%
-	rand_count = (stk->count - 1 * IMPERFECT_RATE) / 100;
+	rand_count = ((stk->count - 1) * IMPERFECT_RATE) / 100;
 	if (rand_count == 0)
 		return ;
 

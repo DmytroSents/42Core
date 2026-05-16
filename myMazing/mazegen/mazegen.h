@@ -25,7 +25,8 @@ enum Walls {
 int 	DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height]);
 
 		// BFS — QUEUE, first in first out 
-int 	BFS_PATH(t_stack *stack, t_param *p, t_cell grid[][p->height]);
+char 	*BFS_PATH(t_stack *stack, t_param *p, t_cell grid[][p->height]);
+char 	*reconstruct(t_param *p, char came_from[][p->height], t_cell grid[][p->height]);
 
 void 	apply_42pattern(t_param *p, t_cell grid[][p->height]);
 
@@ -37,7 +38,7 @@ void    make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height]);
 
 void 	reset_cell_type(t_param *p, t_cell grid[][p->height]);
 
-int  	pop(t_stack *stk);
+int  	pop_last(t_stack *stk);
 void 	push(t_stack *stk, uint16_t new_x, uint16_t new_y);
 
 

@@ -71,14 +71,20 @@ void push(t_stack *stk, uint16_t new_x, uint16_t new_y)
 	//stk->path_t[stk->count++] = (t_way){new_x, new_y}; --Inline syntax!
 }
 
-int pop(t_stack *stk)
+int pop_last(t_stack *stk)
 {
 	if (stk->count <= 0)
 		return (-1);
 	stk->count--;
-	stk->path_t[stk->count].x = 0;
-	stk->path_t[stk->count].y = 0;
 	return (0);
+}
+
+int dequeue(t_stack *stk)
+{
+	if (stk->count <= 0 || stk->first == stk->count)
+		return (-1);
+	stk->first++;
+	return (stk->first);
 }
 
 char find_next(t_stack *stk, t_param *p, t_cell grid[][p->height])
@@ -162,12 +168,11 @@ void move_direct(char dirk, t_stack *stk, t_param *p, t_cell grid[][p->height])
 
 void reset_cell_type(t_param *p, t_cell grid[][p->height])
 {
-	for (int x = 0; x < p->width; x++)
-	{
-		for (int y = 0; y < p->height; y++)
-		{
-			if (grid[x][y].c_type == VISITED)
-				grid[x][y].c_type = NOTHING;
-		}
-	}
+    for (int x = 0; x < p->width; x++)
+        for (int y = 0; y < p->height; y++)
+            if (grid[x][y].c_type == VISITED
+                || grid[x][y].c_type == ENTRY_X)  // ← add this
+                grid[x][y].c_type = NOTHING;
+    // re-mark entry so BFS seed check works
+    grid[p->entry[0]][p->entry[1]].c_type = ENTRY_X;
 }

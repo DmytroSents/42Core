@@ -70,7 +70,7 @@ int		process_str(t_param *p, char *key_s, char flag_c);
 int		valid_intstr(char *str);
 char	*strcasestr(const char *haystack, const char *needle);
 
-int 	maze_tofile(t_param *p, t_cell grid[][p->height]);
+int 	maze_tofile(t_param *p, t_cell grid[][p->height], char *str);
 
 
 //for Human version of visuals in MLX
