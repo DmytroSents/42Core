@@ -18,9 +18,9 @@ static void draw_top_walls(t_param *p, t_cell grid[][p->height], int y)
     {
         printf("+");
         if (grid[x][y].walls & WALL_N)
-            printf("--");
+            printf("---");
         else
-            printf("  ");
+            printf("   ");
     }
     printf("+\n");
 }
@@ -35,15 +35,15 @@ static void draw_middle(t_param *p, t_cell grid[][p->height], int y)
             printf(" ");
 
         if (x == p->entry[0] && y == p->entry[1])
-            printf(CYAN " E" RESET);
+            printf(CYAN " E " RESET);
         else if (x == p->exit[0] && y == p->exit[1])
-            printf(RED " X" RESET);
+            printf(RED " X " RESET);
         else if (grid[x][y].c_type == PATH_SHRT)
-            printf(GREEN "&&" RESET);
+            printf(GREEN "=╬=" RESET);
         else if (grid[x][y].c_type == PATTERN)
-            printf(YELLOW "42" RESET);
+            printf(YELLOW "42*" RESET);
         else
-            printf("  ");
+            printf("   ");
     }
 
     if (grid[p->width - 1][y].walls & WALL_E)
@@ -59,9 +59,9 @@ static void draw_bottom(t_param *p, t_cell grid[][p->height])
     {
         printf("+");
         if (grid[x][y].walls & WALL_S)
-            printf("--");
+            printf("---");
         else
-            printf("  ");
+            printf("   ");
     }
     printf("+\n");
 }

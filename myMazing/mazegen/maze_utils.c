@@ -139,7 +139,7 @@ void move_direct(char dirk, t_stack *stk, t_param *p, t_cell grid[][p->height])
 	if (dirk == 'N') // go North
 	{
 		push(stk, x, y - 1);
-		grid[x][y - 1].c_type = 3;	       // ~ Bitwise NOT
+		grid[x][y - 1].c_type = 3;	       		// ~ Bitwise NOT
 		grid[x][y].walls = grid[x][y].walls & ~WALL_N; //__1110
 		grid[x][y - 1].walls = grid[x][y - 1].walls & ~WALL_S; //__1011
 	}

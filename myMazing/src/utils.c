@@ -88,7 +88,7 @@ int	valid_intstr(char *str)
 	return false;	
 }
 
-int maze_tofile(t_param *p, t_cell grid[][p->height], char *str)
+int maze_tofile(t_param *p, t_cell grid[][p->height], char *path_str)
 {
     if (!p || !p->output_file)
         return (-1);
@@ -114,7 +114,7 @@ int maze_tofile(t_param *p, t_cell grid[][p->height], char *str)
     fprintf(f, "%d,%d\n", p->exit[0],  p->exit[1]);
     
 	fprintf(f, "\n"); 
-	fprintf(f, "%s\n", str);
+	fprintf(f, "%s\n", path_str);
 
     fclose(f);
     return 0;

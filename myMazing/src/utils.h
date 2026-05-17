@@ -17,7 +17,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct params {
+typedef struct  {
     int		width;
     int		height;
     int		exit[2];
@@ -27,9 +27,9 @@ typedef struct params {
 	char	*output_file;
 }	t_param;
 
-typedef struct cell  {
-	uint8_t		walls; // unsigned int 8 bit 00000000
-	uint8_t		c_type; //coz <bool> is not enough
+typedef struct {
+	uint8_t	   walls; // unsigned int 8 bit 00000000
+	uint8_t	   c_type; //coz <bool> is not enough
 }	t_cell;
 
 enum c_Types {
@@ -45,11 +45,11 @@ enum c_Types {
 typedef struct  {
 	uint16_t 	x;
 	uint16_t	y;
-	char 	  dir;//for Path
+	char 	    direct; //for Path
 }	t_way;
 	
 //not Dynamik but Array!
-typedef struct stack {
+typedef struct  {
 	size_t 	 first; //for queue.pop()
 	size_t	 count;
 	t_way  *path_t; // ->t_way{x,y}

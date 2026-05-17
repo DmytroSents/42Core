@@ -1,7 +1,7 @@
-WIDTH=33
-           HEIgHT= 27                                   
-EnTRY=1,1
-  EXIT=            32,16
+WIDTH=9
+           HEIgHT= 8                                 
+EnTRY=		0,0
+  EXIT=            7,7
 PERFECT=   FaLsE    		
 OUTPUT_FILE    =__maze.txt
 
@@ -10,21 +10,21 @@ OUTPUT_FILE    =__maze.txt
 
 # 22 - 7 = 15 / 2 = 7
 # (width - 7) / 2 = middle;
-+---------------------+
-|          			  |
-|
-|        
-|
-|		*   ***
-|		* *   *
-|		*** ***
-|		  * *
-|		  * ***
-|
-|
-|int pat_h = 5;
-|int pat_w = 7;
-+--------------------_+
+#+---------------------+
+#|          			  |
+#|
+#|        
+#|
+#|		*   ***    visited(x + (y * width))
+#|		* *   *
+#|		*** ***
+#|		  * *
+#|		  * ***
+#|
+#
+#|int pat_h = 5;
+#|int pat_w = 7;
+#+--------------------_+
 #int start_x = (p->width  - pat_w) / 2;
 #int start_y = (p->height - pat_h) / 2;
 

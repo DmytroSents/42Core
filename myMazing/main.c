@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 			free(param.output_file);
 		return (-1);	}
 
+	char *path_str = NULL;
 		
 	//VLA grid on the stack: [width][height]
 	t_cell grid[param.width][param.height];
@@ -46,11 +47,13 @@ int main(int argc, char *argv[])
 
 	DFS_GEN(&STACK, &param, grid);
 	reset_cell_type(&param, grid);
-	char *path_str = BFS_PATH(&STACK, &param, grid);
+
+	path_str = BFS_PATH(&STACK, &param, grid);
+
 
 	render_maze(&param, grid);
 	 //writes to output_file
-	maze_tofile(&param, grid, path_str); 
+	//maze_tofile(&param, grid, path_str); 
 	
 	//printf("%d\n", param.seed);
 	//print_struct(&param);
