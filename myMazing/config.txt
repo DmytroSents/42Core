@@ -1,11 +1,11 @@
-WIDTH=9
-           HEIgHT= 8                                 
-EnTRY=		0,0
-  EXIT=            7,7
+WIDTH=27
+           HEIgHT= 21                                 
+EnTRY=		1,2
+  EXIT=            26,20
 PERFECT=   FaLsE    		
 OUTPUT_FILE    =__maze.txt
 
-#SEED= 77
+SEED= 6767
 
 
 # 22 - 7 = 15 / 2 = 7

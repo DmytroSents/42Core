@@ -14,12 +14,6 @@
 	//bin 0100 South == 4; ↓
 	//bin 1000 West  == 8; ←
 
-enum Walls {
-    WALL_N = 1 << 0,
-    WALL_E = 1 << 1,
-    WALL_S = 1 << 2,
-    WALL_W = 1 << 3 
-};
 
 		// DFS — STACK, last in first out
 int 	DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height]);

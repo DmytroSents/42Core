@@ -15,7 +15,7 @@ int txt_to_struct(int argc, char *argv[], t_param *p)
     {
         size_t len = strlen(txt_buff);
 
-        	// IF line too long: buffer filled AND \n doesn't fit in!
+        	// IF line too long: buffer filled AND \n doesn't fit in.
         if (len == sizeof(txt_buff) - 1 && txt_buff[len - 1] != '\n')
         {
             printf("Stop jerking my config file, psycho!\n");

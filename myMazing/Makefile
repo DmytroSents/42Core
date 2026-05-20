@@ -2,12 +2,17 @@
 NAME = amazing
 
 CC = cc
-CFLAGS = -std=c99 
+CFLAGS = -std=c99
+LDFLAGS = -lncursesw
 #-Wall -Wextra -Werror  -g3
 
 SRCDIR = src
 MAZEDIR = mazegen
-SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c terminc.c
+
+ # SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c rend_term.c
+  SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c  interactive.c
+
+
 OBJS = $(SRCS:.c=.o)
 
 #default config
@@ -18,7 +23,7 @@ all: $(NAME)
 	
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@

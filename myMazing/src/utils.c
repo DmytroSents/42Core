@@ -102,7 +102,7 @@ int maze_tofile(t_param *p, t_cell grid[][p->height], char *path_str)
     {
         for (int x = 0; x < p->width; x++)
         {
-            unsigned char w = (unsigned char)grid[x][y].walls;
+			unsigned char w = (unsigned char)grid[x][y].walls;
 			// removes bits higher Decimal 15 
 			w = w & 0xF;		//	[Hex F]
             fprintf(f, "%X", w);  //write to file
@@ -118,4 +118,26 @@ int maze_tofile(t_param *p, t_cell grid[][p->height], char *path_str)
 
     fclose(f);
     return 0;
+}
+
+void	rtsver_tf(char *str)
+{
+	if (!str)	return ;
+
+	size_t	len = strlen(str);
+	size_t	half = len / 2;
+	size_t	i;
+	char	*buf = calloc(half + 1, sizeof(char));
+	if (!buf)	return ;
+
+	memcpy(buf, str, half);
+
+	for (i = 0; i < half; i++)
+		str[i] = str[len - 1 - i];
+
+	for (i = 0; i < half; i++)
+		str[len - half + i] = buf[half - 1 - i];
+
+	str[len] = '\0';
+	free(buf);
 }
