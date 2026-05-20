@@ -2,9 +2,14 @@
 
 int DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height])
 {
+	int 	new_seed;
+
 	if (p->seed == 0)
-		{	p->seed = (int)time(NULL);	}
-	srand((unsigned int)p->seed);   // seed once
+		{	new_seed = (int)time(NULL);	}
+	if (p->seed != 0)
+		{	new_seed = p->seed;	}
+	srand((unsigned int)new_seed);   // seed once
+	
 
 	uint16_t  x = (uint16_t)p->entry[0];
 	uint16_t  y = (uint16_t)p->entry[1];
@@ -56,7 +61,7 @@ void make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height])
 	if (rand_count == 0)
 		return ;
 
-	for (int i = 0; i < rand_count; i++)
+	for (uint32_t i = 0; i < rand_count; i++)
     {
         int 	 pick = rand() % stk->count;
         uint16_t x = stk->path_t[pick].x;

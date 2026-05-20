@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
             free(param.output_file);
         return (-1);
     }
+	char *path_str = NULL;
 
     /* VLA — must be declared before any branching that skips it */
     t_cell grid[param.width][param.height];
@@ -43,16 +44,20 @@ int main(int argc, char *argv[])
     DFS_GEN(&STACK, &param, grid);
     reset_cell_type(&param, grid);
 
-    char *path_str = BFS_PATH(&STACK, &param, grid);
+    path_str = BFS_PATH(&STACK, &param, grid);
 
     /* ncurses loop — regeneration happens inside here */
     run_interactive(&param, &STACK, grid, &path_str);
 
+	// render_maze(p, grid); --just in case.
+
     /* write final state to file after user quits */
     maze_tofile(&param, grid, path_str);
 
-    free(STACK.path_t);
-    free(path_str);
+	if (STACK.path_t)
+    	free(STACK.path_t);
+    if (path_str)
+		free(path_str);
     free(param.output_file);
     return (0);
 }

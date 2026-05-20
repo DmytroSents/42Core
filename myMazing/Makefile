@@ -2,9 +2,10 @@
 NAME = amazing
 
 CC = cc
-CFLAGS = -std=c99
-LDFLAGS = -lncursesw
-#-Wall -Wextra -Werror  -g3
+CFLAGS = -std=c99 -Wall -Wextra -Werror  -g3
+
+
+LDFLAGS = -lncursesw 
 
 SRCDIR = src
 MAZEDIR = mazegen

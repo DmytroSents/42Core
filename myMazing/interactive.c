@@ -103,13 +103,13 @@ static void ncurses_render(t_param *p, t_cell grid[][p->height])
             if (x == p->entry[0] && y == p->entry[1])
             {
                 attron(COLOR_PAIR(CP_ENTRY) | A_BOLD);
-                printw(" E ");
+                printw("[E]");
                 attroff(COLOR_PAIR(CP_ENTRY) | A_BOLD);
             }
             else if (x == p->exit[0] && y == p->exit[1])
             {
                 attron(COLOR_PAIR(CP_EXIT) | A_BOLD);
-                printw(" X ");
+                printw("{X}");
                 attroff(COLOR_PAIR(CP_EXIT) | A_BOLD);
             }
             else if (show_path && grid[x][y].c_type == PATH_SHRT)
@@ -121,7 +121,7 @@ static void ncurses_render(t_param *p, t_cell grid[][p->height])
             else if (grid[x][y].c_type == PATTERN)
             {
                 attron(COLOR_PAIR(CP_PAT) | A_BOLD);
-                printw("42 ");
+                printw("42*");
                 attroff(COLOR_PAIR(CP_PAT) | A_BOLD);
             }
             else
@@ -157,7 +157,6 @@ static void do_regen(t_param *p, t_stack *stack,
 {
     /* wipe grid */
     grid_init(p, grid);
-    p->seed      = 0;
     stack->first = 0;
     stack->count = 0;
 
@@ -225,11 +224,11 @@ void render_maze(t_param *p, t_cell grid[][p->height])
         for (int x = 0; x < p->width; x++)
         {
             printf(grid[x][y].walls & WALL_W ? "|" : " ");
-            if (x == p->entry[0] && y == p->entry[1])      printf(" E ");
-            else if (x == p->exit[0] && y == p->exit[1])   printf(" X ");
+            if (x == p->entry[0] && y == p->entry[1])      printf("[E]");
+            else if (x == p->exit[0] && y == p->exit[1])   printf("{X}");
             else if (grid[x][y].c_type == PATH_SHRT)
                 printf("%s", get_path_char(p, grid, x, y));
-            else if (grid[x][y].c_type == PATTERN)         printf("42 ");
+            else if (grid[x][y].c_type == PATTERN)         printf("42*");
             else                                            printf("   ");
         }
         printf(grid[p->width - 1][y].walls & WALL_E ? "|\n" : " \n");
