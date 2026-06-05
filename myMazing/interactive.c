@@ -118,7 +118,7 @@ static void ncurses_render(t_param *p, t_cell grid[][p->height])
                 printw("%s", get_path_char(p, grid, x, y));
                 attroff(COLOR_PAIR(CP_PATH) | A_BOLD);
             }
-            else if (grid[x][y].c_type == PATTERN)
+            else if (grid[x][y].c_type == FT_CELL)
             {
                 attron(COLOR_PAIR(CP_PAT) | A_BOLD);
                 printw("42*");
@@ -228,7 +228,7 @@ void render_maze(t_param *p, t_cell grid[][p->height])
             else if (x == p->exit[0] && y == p->exit[1])   printf("{X}");
             else if (grid[x][y].c_type == PATH_SHRT)
                 printf("%s", get_path_char(p, grid, x, y));
-            else if (grid[x][y].c_type == PATTERN)         printf("42*");
+            else if (grid[x][y].c_type == FT_CELL)         printf("42*");
             else                                            printf("   ");
         }
         printf(grid[p->width - 1][y].walls & WALL_E ? "|\n" : " \n");

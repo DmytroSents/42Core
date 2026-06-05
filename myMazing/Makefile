@@ -10,7 +10,7 @@ LDFLAGS = -lncursesw
 SRCDIR = src
 MAZEDIR = mazegen
 
- # SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c rend_term.c
+ # SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c renderwin.c
   SRCS = $(wildcard $(SRCDIR)/*.c) $(wildcard $(MAZEDIR)/*.c)  main.c  interactive.c
 
 

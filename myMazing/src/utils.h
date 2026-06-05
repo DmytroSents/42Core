@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdint.h>
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 512
@@ -43,7 +43,7 @@ enum Walls {
 enum c_Types {
     NOTHING   = 0,
     ENTRY_X   = 1,
-    PATTERN   = 2,
+    FT_CELL   = 2,
     VISITED   = 3,
     PATH_SHRT = 4,
 };

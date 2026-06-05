@@ -46,7 +46,7 @@ void make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height])
 	{
 		for (int x = 1; x < p->width - 1; x++)
 		{
-			if (grid[x][y].c_type == PATTERN)
+			if (grid[x][y].c_type == FT_CELL)
 				continue ;
 			current_w = grid[x][y].walls & 0xF;
 			open_walls = !(current_w & WALL_N) + !(current_w & WALL_E)
@@ -72,22 +72,22 @@ void make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height])
 	// find which wall is open (the one clear bit)
 	if (!(current_w & WALL_N))  // open side is North → break South
 	{
-		if (y < p->height - 1 && grid[x][y + 1].c_type != PATTERN)
+		if (y < p->height - 1 && grid[x][y + 1].c_type != FT_CELL)
 		{ grid[x][y].walls &= ~WALL_S; grid[x][y + 1].walls &= ~WALL_N; }
 	}
 	else if (!(current_w & WALL_E))  // open side is East → break West
 	{
-		if (x > 0 && grid[x - 1][y].c_type != PATTERN)
+		if (x > 0 && grid[x - 1][y].c_type != FT_CELL)
 		{ grid[x][y].walls &= ~WALL_W; grid[x-1][y].walls &= ~WALL_E; }
 	}
 	else if (!(current_w & WALL_S))  // open side is South → break North
 	{
-		if (y > 0 && grid[x][y - 1].c_type != PATTERN)
+		if (y > 0 && grid[x][y - 1].c_type != FT_CELL)
 		{ grid[x][y].walls &= ~WALL_N; grid[x][y - 1].walls &= ~WALL_S; }
 	}
 	else if (!(current_w & WALL_W))  // open side is West → break East
 	{
-		if (x < p->width - 1 && grid[x + 1][y].c_type != PATTERN)
+		if (x < p->width - 1 && grid[x + 1][y].c_type != FT_CELL)
 		{ grid[x][y].walls &= ~WALL_E; grid[x + 1][y].walls &= ~WALL_W; }
 	}
 
