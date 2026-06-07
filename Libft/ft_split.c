@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 19:16:44 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/01/18 22:46:26 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/06 10:51:51 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	**free_arr(char **str_arr, int amount)
 	i = 0;
 	while (str_arr[i] && i < amount - 1)
 	{
-		free(str_arr[i]);
+		free(str_arr[i++]);
 	}
 	str_arr[0] = NULL;
 	return (str_arr);

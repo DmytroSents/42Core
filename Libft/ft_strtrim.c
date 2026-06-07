@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 16:59:26 by dbrusent          #+#    #+#             */
-/*   Updated: 2025/11/01 13:01:17 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/06 11:39:05 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ char	*ft_strtrim(char const *str, char const *set)
 
 	start = 0;
 	s_end = 0;
+	if (!*set)
+		return (ft_strdup(str));
 	if (!*str)
 		return (ft_strdup(""));
 	str_len = ft_strlen(str);
 	while (ft_strchr(set, str[start]) && str[start])
 		start++;
-	if (!*set)
-		return (ft_strdup(str));
-	while (ft_strchr(set, str[str_len - s_end]) && str_len - s_end > 0)
+	while (str_len > s_end && ft_strchr(set, str[str_len - s_end]))
 		s_end++;
 	if (start + --s_end >= str_len)
 		return (ft_strdup(""));

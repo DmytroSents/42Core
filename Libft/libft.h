@@ -52,6 +52,7 @@ void	ft_bzero(void *ptr, size_t n);
 char	*ft_substr(char const *str, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *str, char const *set);
+void	free_split(char **str_arr, char flah);
 char	**ft_split(char const *src, char c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
