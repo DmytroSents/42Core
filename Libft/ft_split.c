@@ -6,23 +6,30 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 19:16:44 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/06 10:51:51 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/07 20:42:11 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	**free_arr(char **str_arr, int amount)
+void	free_split(char **str_arr, char flah)
 {
 	int	i;
 
 	i = 0;
-	while (str_arr[i] && i < amount - 1)
+	while (str_arr[i])
 	{
-		free(str_arr[i++]);
+		if (str_arr[i])
+			free(str_arr[i]);
+		i++;
 	}
-	str_arr[0] = NULL;
-	return (str_arr);
+	if (str_arr[i])
+		free(str_arr[i]);
+	if (flah)
+	{
+		free(str_arr);
+		str_arr = NULL;
+	}
 }
 
 static int	count_substr(const char *str, char c)
@@ -62,7 +69,7 @@ static char	**put_arr_str(char **str_arr, char *sub_str, int amount, int c)
 		{
 			str_arr[i] = ft_substr(sub_str, 0, sub_end - sub_str);
 			if (!str_arr[i])
-				return (free_arr(str_arr, amount));
+				return (free_split(str_arr, amount), NULL);
 			sub_str = sub_end;
 			i++;
 		}
