@@ -1,26 +1,6 @@
 #include "mazegen.h"
 
-void	rtsver_tf(char *str)
-{
-	if (!str)	return ;
 
-	size_t	len = strlen(str);
-	size_t	half = len / 2;
-	size_t	i;
-	char	*buf = calloc(half + 1, sizeof(char));
-	if (!buf)	return ;
-
-	memcpy(buf, str, half);
-
-	for (i = 0; i < half; i++)
-		str[i] = str[len - 1 - i];
-
-	for (i = 0; i < half; i++)
-		str[len - half + i] = buf[half - 1 - i];
-
-	str[len] = '\0';
-	free(buf);
-}
 
 int DFS_GEN(t_stack *stack, t_param *p, t_cell grid[][p->height])
 {
