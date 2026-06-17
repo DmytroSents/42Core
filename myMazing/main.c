@@ -10,16 +10,17 @@ int main(int argc, char *argv[])
         .perfect = false, .seed = 0,
         .output_file = NULL
     };
-
-    int main_flag = txt_to_struct(argc, argv, &param);
-    int cst_errno = error_check(&param, NULL);
-    if (main_flag < 0 || cst_errno > 1) {
-        ft_perror(cst_errno);
-        if (param.output_file)
-            free(param.output_file);
-        return (-1);
-    }
 	char *path_str = NULL;
+
+	if (txt_to_struct(argc, argv, &param) < 0)
+		return (127);
+	
+    int cst_errno = error_check(&param, NULL);
+    if (cst_errno < 0) {
+        ft_perror(cst_errno);
+        if (param.output_file) free(param.output_file);
+        	return (-1);
+    }
 
     /* VLA — must be declared before any branching that skips it */
     t_cell grid[param.width][param.height];
@@ -27,10 +28,11 @@ int main(int argc, char *argv[])
 
     apply_42pattern(&param, grid);
     cst_errno = error_check(&param, grid);
-    if (cst_errno > 1) {
+    if (cst_errno) {
         ft_perror(cst_errno);
-        free(param.output_file);
-        return (-1);
+        if (param.output_file) free(param.output_file);
+		if (cst_errno != 6)
+        	return (-1);
     }
 
     t_stack STACK = {0};

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define IMPERFECT_RATE 42
+#define IMPERFECT_RATE 97
 //persentage, could be defined in config(don't wanna)
 
 	// grid[↓x][y] (unfortunately it's upside down)
@@ -31,7 +31,7 @@ void    make_imperfect(t_stack *stk, t_param *p, t_cell grid[][p->height]);
 
 
 void 	reset_cell_type(t_param *p, t_cell grid[][p->height]);
-
+void        rtsver_tf(char *str);
 int  	pop_last(t_stack *stk);
 void 	push(t_stack *stk, uint16_t new_x, uint16_t new_y);
 

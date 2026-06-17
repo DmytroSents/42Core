@@ -21,9 +21,9 @@ int	error_check(t_param *p, t_cell grid[][p->height])
 		if (grid[p->entry[0]][p->entry[1]].c_type == 2
 		|| grid[p->exit[0]][p->exit[1]].c_type == 2)
 		return 5;
-	//if (p->width < 7 || p->height < 5) return 6;
-
-	return FALSE;	
+	if (p->width < 7 || p->height < 5) return 0;
+		
+	return -1;
 }
 
 void	ft_perror(int num)
@@ -120,24 +120,4 @@ int maze_tofile(t_param *p, t_cell grid[][p->height], char *path_str)
     return 0;
 }
 
-void	rtsver_tf(char *str)
-{
-	if (!str)	return ;
 
-	size_t	len = strlen(str);
-	size_t	half = len / 2;
-	size_t	i;
-	char	*buf = calloc(half + 1, sizeof(char));
-	if (!buf)	return ;
-
-	memcpy(buf, str, half);
-
-	for (i = 0; i < half; i++)
-		str[i] = str[len - 1 - i];
-
-	for (i = 0; i < half; i++)
-		str[len - half + i] = buf[half - 1 - i];
-
-	str[len] = '\0';
-	free(buf);
-}

@@ -61,8 +61,7 @@ int process_line(t_param *params, char *buffer)
     else if (strcasestr(key_str, "OUTPUT_FILE")
 			 && params->output_file == NULL)
         return (process_str(params, key_str, 'o'));
-
-    return (0);
+    return (-1);
 }
 
 int process_str(t_param *p, char *key_s, char flag_c)
@@ -140,7 +139,7 @@ int process_str(t_param *p, char *key_s, char flag_c)
 
 int process_int(t_param *p, char *key_s, char flag_c)
 {
-    int value[2] = {-1, -1};
+    int value[2] = {0, 0};
 
     while (*key_s == ' ' || *key_s == '\t')
         key_s++;
