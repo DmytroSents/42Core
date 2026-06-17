@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 06:47:54 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/13 10:36:35 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/17 11:24:29 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ int	get_env_path(t_param *p, char **env)
 	return (0);
 }
 
-char	*ft_full_path(t_param *p, char **envp, int n)
+char	*ft_full_path(t_param *p, char *temp, int n)
 {
 	int		s;
 	size_t	len[2];
-	char	*temp;
 
 	s = 0;
-	temp = NULL;
+	if (ft_strchr(p->cmd_argv[n][0], '/'))
+		return (p->cmd_argv[n][0]);
 	if (!p->path_v || !p->cmd_argv || !p->cmd_argv[n])
 		return (NULL);
 	while (p->path_v[s])
@@ -76,10 +76,7 @@ void	ft_free(t_param	*p)
 	if (p == NULL)
 		return ;
 	while (p->cmd_argv[i] != NULL)
-	{
-		free_split(p->cmd_argv[i], 'f');
-		i++;
-	}
+		free_split(p->cmd_argv[i++], 'f');
 	if (p->path_v)
 		free_split(p->path_v, 'f');
 	if (p->cmd_argv)
@@ -89,7 +86,11 @@ void	ft_free(t_param	*p)
 
 void	perror_pexit(t_param *p, int num)
 {
+	if (p->pipe_fd[0] > 0)
+		close(p->pipe_fd[0]);
+	if (p->pipe_fd[1] > 0)
+		close(p->pipe_fd[1]);
 	perror(NULL);
 	ft_free(p);
-	exit(1);
+	exit(num);
 }

@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 12:26:52 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/13 12:43:04 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/17 10:40:30 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 typedef struct param
 {
-	int			fd[5];		//???
+	int			fd[3];
 	int			pipe_fd[2];
 	char		**path_v;
 	char		***cmd_argv;
@@ -37,7 +37,7 @@ void	ft_free(t_param	*p);
 int		param_init(t_param **p, int argc, char *argv[], char **env);
 
 int		get_env_path(t_param *p, char **envp);
-char	*ft_full_path(t_param *p, char **envp, int n);
+char	*ft_full_path(t_param *p, char *temp, int n);
 
 pid_t	first_fork_exe(t_param *p, char **env);
 pid_t	last_fork_exe(t_param *p, char **env);

@@ -10,14 +10,14 @@ OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
 
 LIBFT_DIR := libft
-#LIBFT := $(LIBFT_DIR)/libft.a
+LIBFT := $(LIBFT_DIR)/libft.a
 LIBFT_PATH := -L./libft -lft
 RM := rm -rf
 
 
 all: $(NAME)
 
-#$(LIBFT):@make -C $(LIBFT_DIR) all
+$(LIBFT):@make -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJS) 
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_PATH) -o $(NAME)

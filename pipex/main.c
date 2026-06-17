@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:42:46 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/13 15:28:59 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/17 11:12:14 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,30 +43,35 @@ int	param_init(t_param **p, int argc, char *argv[], char **env)
 int	main(int argc, char *argv[], char **env)
 {
 	t_param	*param;
-	char	buffer[777] = {0};
+	pid_t	pid[2];
 
 	param = NULL;
-	if (argc != 5)return
-		(perror("Input  file1 \"cmd1\" \"cmd2\" file2  to achieve"), -1);
+	if (argc != 5)
+		return (perror("Input  file1 \"cmd1\" \"cmd2\" file2  to achieve"), -1);
 	if (param_init(&param, argc, argv, env) < 0)
-		if (param)
-			return (ft_free(param), -1);
-	
-		param->pipe_fd[1] = dup(1);
-		param->pipe_fd[0] = dup(0);
-	
+		perror_pexit(param, EXIT_FAILURE);
 	if (pipe(param->pipe_fd) < 0)
-		return (ft_free(param), -1);
-	first_fork_exe(param, env);
-	//read(0, buffer, 777);
-
-	printf("Not in fork?%s\n", buffer);
-	last_fork_exe(param, env);
-
+		perror_pexit(param, EXIT_FAILURE);
+	pid[0] = first_fork_exe(param, env);
+	if (pid[0] < 0)
+		perror_pexit(param, EXIT_FAILURE);
+	pid[1] = last_fork_exe(param, env);
+	if (pid[1] < 0)
+		perror_pexit(param, EXIT_FAILURE);
+	close(param->pipe_fd[0]);
+	close(param->pipe_fd[1]);
+	waitpid(pid[0], NULL, 0);
+	waitpid(pid[1], NULL, 0);
+	
 	ft_free(param);
 	return (0);
 }
 
-
-
-
+	// int BUFF_SIZE = 7777;	int bs = 0;
+	// char	buffer[BUFF_SIZE];	while(bs<BUFF_SIZE)buffer[bs++] = 0;
+	// close(param->pipe_fd[1]);
+	// ssize_t n = read(param->pipe_fd[0], buffer, BUFF_SIZE - 1);
+	// if (n >= 0)	buffer[n] = '\0';
+	// close(param->pipe_fd[0]);
+	// printf("%s\nNot in fork?\n", buffer);
+	//int i = 0;while(env[i])printf("%s\n", env[i++]);
