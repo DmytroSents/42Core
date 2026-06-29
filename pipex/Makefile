@@ -1,44 +1,42 @@
 NAME = pipex
+
 CC = cc
-CFLAGS = -g -I./include -I./libft	#  -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -I./src -I./libft
+
+SRCS = \
+	src/main.c \
+	src/utils.c \
+	src/forking.c
+
 OBJ_DIR = obj
-SRCS = main.c utils.c forking.c
-   #	src/main.c src/pipex.c src/check_path.c src/utils.c
-
-
 OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
-LIBFT_DIR := libft
-LIBFT := $(LIBFT_DIR)/libft.a
-LIBFT_PATH := -L./libft -lft
-RM := rm -rf
+RM = rm -rf
 
+all: libft $(NAME)
 
-all: $(NAME)
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
-$(LIBFT):@make -C $(LIBFT_DIR) all
-
-$(NAME): $(OBJS) 
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_PATH) -o $(NAME)
-
+$(LIBFT):
+	@make -C $(LIBFT_DIR) all
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
-	mkdir -p $(sort $(dir $(OBJS)))
 
 clean:
 	$(RM) $(OBJ_DIR)
-	#@make -C $(LIBFT_DIR) clean
-
+	@make -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	#@make -C $(LIBFT_DIR) fclean
+	@make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

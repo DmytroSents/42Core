@@ -6,11 +6,20 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:42:46 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/17 11:12:14 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/28 06:24:05 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+static int	get_exit_code(int status)
+{
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
+}
 
 int	param_init(t_param **p, int argc, char *argv[], char **env)
 {
@@ -44,10 +53,11 @@ int	main(int argc, char *argv[], char **env)
 {
 	t_param	*param;
 	pid_t	pid[2];
+	int		status;
 
 	param = NULL;
 	if (argc != 5)
-		return (perror("Input  file1 \"cmd1\" \"cmd2\" file2  to achieve"), -1);
+		return (perror("Input  file1 \"cmd1\" \"cmd2\" file2  to achieve"), 1);
 	if (param_init(&param, argc, argv, env) < 0)
 		perror_pexit(param, EXIT_FAILURE);
 	if (pipe(param->pipe_fd) < 0)
@@ -61,17 +71,11 @@ int	main(int argc, char *argv[], char **env)
 	close(param->pipe_fd[0]);
 	close(param->pipe_fd[1]);
 	waitpid(pid[0], NULL, 0);
-	waitpid(pid[1], NULL, 0);
-	
+	waitpid(pid[1], &status, 0);
 	ft_free(param);
-	return (0);
+	return (get_exit_code(status));
 }
 
-	// int BUFF_SIZE = 7777;	int bs = 0;
-	// char	buffer[BUFF_SIZE];	while(bs<BUFF_SIZE)buffer[bs++] = 0;
-	// close(param->pipe_fd[1]);
-	// ssize_t n = read(param->pipe_fd[0], buffer, BUFF_SIZE - 1);
-	// if (n >= 0)	buffer[n] = '\0';
-	// close(param->pipe_fd[0]);
-	// printf("%s\nNot in fork?\n", buffer);
-	//int i = 0;while(env[i])printf("%s\n", env[i++]);
+// t_param	*p = param;
+//printf("%s;\n%s;\n%s;\n", p->cmd_argv[0][0], 
+//		 p->cmd_argv[0][1], p->cmd_argv[0][2]);

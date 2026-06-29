@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 05:49:33 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/17 11:31:29 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/06/28 06:22:37 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ pid_t	first_fork_exe(t_param *p, char **env)
 			perror_pexit(p, EXIT_FAILURE);
 		close(p->fd[0]);
 		close(p->pipe_fd[1]);
-		path = ft_full_path(p, NULL, 1);
+		path = ft_full_path(p, NULL, 0);
 		if (!path)
 			perror_pexit(p, EXIT_FAILURE);
 		execve(path, p->cmd_argv[0], env);
