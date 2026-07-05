@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:12:17 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/30 09:45:36 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/05 08:47:52 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,50 +27,50 @@ int	main(int argc, char *argv[])
 
 	ft_errno = argc;
 	ft_errno = parse_args(argv, &p_tr, &ft_errno, 0);
-	// if (ft_errno) return (ft_errno);
+	if (ft_errno)
+		return (ft_errno);
+	if (fill_struct(&p_tr) < 0)
+		return (-1);
 
 	ft_errno = (int)errno;
 	printf("\nFT_ERR:%d;\n", ft_errno);
-	return (0);
-}
-
-int	parse_args(char *argv[], t_data	*p, int *ft_err, int i)
-{
-	int	arg_i[7];
-
-	if (*ft_err != 9)
-		return (9);
-	if (strcmp(argv[8], "fifo") != 0 && strcmp(argv[8], "edf") != 0)
-		return (8);
-	memset(arg_i, 0, 7 * sizeof(int));
-	while (++i < 8)
-	{
-		*ft_err = 0;
-		arg_i[i - 1] = atoi(argv[i]);
-		if (arg_i[i - 1] <= 0)
-			return (i);
-	}
-	p->coders_num = (size_t)(arg_i[0] + 1);
-	p->coders = malloc(sizeof(t_coder) * (p->coders_num));
-	if (p->coders == NULL)
+	printf("SizeOfT_Data:%zu\n", sizeof(t_data));
+	if (create_threads(&p_tr, 0) != 0)
 		return (-1);
-	p->burnout_time = (size_t)arg_i[1];
-	p->compile_time = (size_t)arg_i[2];
-	p->debugin_time = (size_t)arg_i[3];
-	p->refactor_time = (size_t)arg_i[4];
-	p->compile_req_num = (size_t)arg_i[5];
-	p->dongle_cooldown = (size_t)arg_i[6];
-	return (*ft_err);
+	int i = 0;
+	while (i < p_tr.coders_num)
+	{
+		if (pthread_join(p_tr.coders[i].thread, NULL) != 0)
+			return (-1);
+		i++;
+	}
+	return (ft_free(&p_tr, 0));
 }
 
-int	fill_struct(t_data *p)
+// The scheduler is not scheduling threads;
+// it is scheduling access to each dongle.
+// policy decides which coder gets a dongle next.
+int create_threads(t_data *p, int i)
 {
-	int	i;
-
-	i = 0;
 	while (i < p->coders_num)
 	{
-		p->coders[i].data = p;
-		p->coders[i].id = i++;
+		if (pthread_create(&p->coders[i].thread, NULL, &routine, &p->coders[i]))
+			return (-1);
+		i++;
 	}
+	return (0);
+}
+void	*routine(void *coder)
+{
+	t_coder	*ptr;
+
+	ptr = (t_coder *)coder;
+	printf("ID:%zu\n", ptr->id);
+	// request dongle ? compile : die
+	// release dongles
+	// debug -> refactor
+	// wrap it inside while (lo0p)
+	// change state_variables every step
+	// implement time-functions
+	return (NULL);
 }

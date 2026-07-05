@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:27:41 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/06/30 09:53:59 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/05 07:38:21 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,14 @@
 # include <pthread.h>
 # include "utils.h"
 # include "ft_threads.h"
+# include <limits.h>
 
-// # include <limits.h>
+# define READY 1
+# define ON_CD 0
+
+typedef struct s_data	t_data;
+typedef struct s_coder	t_coder;
+typedef struct s_dongle	t_dongle;
 
 typedef enum state
 {
@@ -34,29 +40,32 @@ typedef enum state
 	WAITING,
 }	t_state;
 
-typedef struct coder
+struct s_coder
 {
-	size_t		id;
-	int			state;
-	pthread_t	thread;
-	t_data		*data;
-}	t_coder;
+	size_t			id;
+	int				state;
+	pthread_t		thread;
+	size_t			comp_todo;
+	pthread_mutex_t	*right;	
+	pthread_mutex_t	*left;
+	t_data			*data;
+};
 
-typedef struct data
+struct s_data
 {
-	t_coder		*coders;
-	size_t		coders_num;
-	size_t		burnout_time;
-	size_t		compile_time;
-	size_t		debugin_time;
-	size_t		refactor_time;
-	size_t		compile_req_num;
-	size_t		dongle_cooldown;
-	
-}	t_data;
+	t_coder			*coders;
+	size_t			coders_num;
+	size_t			burnout_time;
+	size_t			compile_time;
+	size_t			debugin_time;
+	size_t			refactor_time;
+	size_t			compile_req_num;
+	size_t			dongle_cooldown;
+	pthread_mutex_t	*dongles;
+};
 
-int	fill_struct(t_data *p);
-int	parse_args(char *argv[], t_data	*p, int *ft_err, int i);
+void	*routine(void *coder);
+int		create_threads(t_data *p, int i);
 
 /* ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug} 
 	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler} 
