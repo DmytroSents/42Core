@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:40:28 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/05 04:46:19 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/11 19:08:24 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int		fill_struct(t_data *p);
 
 int		ft_free(t_data *p, int ex_code);
 
+int		create_threads(t_data *p, int i);
+void	ft_destroy_join(t_data *p, int amount, char chr);
 int		parse_args(char *argv[], t_data	*p, int *ft_err, int i);
 
 #endif

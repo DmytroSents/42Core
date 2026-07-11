@@ -1,14 +1,15 @@
 
 NAME = codexion
 CC = cc
-CFLAGS =  -pthread #-Wall -Wextra -Werror
+CFLAGS = -pthread #-Wall -Wextra -Werror
 
 SRC_DIR = src
 OBJ_DIR = obj
 INC_DIR = include
 
-SRCS = $(SRC_DIR)/codexion.c \
-       $(SRC_DIR)/utils.c
+SRCS =  $(SRC_DIR)/utils.c	 \
+		$(SRC_DIR)/codexion.c \
+		$(SRC_DIR)/routine.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

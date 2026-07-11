@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:27:41 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/05 07:38:21 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/11 19:27:55 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include "utils.h"
-# include "ft_threads.h"
 # include <limits.h>
 
 # define READY 1
@@ -40,20 +39,30 @@ typedef enum state
 	WAITING,
 }	t_state;
 
+struct s_dongle
+{
+	int				state;
+	pthread_mutex_t	*ptr;
+	size_t			release_time;
+};
+
 struct s_coder
 {
 	size_t			id;
+	t_data			*data;
 	int				state;
 	pthread_t		thread;
 	size_t			comp_todo;
-	pthread_mutex_t	*right;	
-	pthread_mutex_t	*left;
-	t_data			*data;
+	t_dongle		*right;	
+	t_dongle		*left;
+	size_t			time_0;
+	size_t			elapsed;
 };
 
 struct s_data
 {
 	t_coder			*coders;
+	t_dongle		*dongle;
 	size_t			coders_num;
 	size_t			burnout_time;
 	size_t			compile_time;
@@ -61,11 +70,16 @@ struct s_data
 	size_t			refactor_time;
 	size_t			compile_req_num;
 	size_t			dongle_cooldown;
-	pthread_mutex_t	*dongles;
+	pthread_mutex_t	*print_mutex;
 };
 
+int		time_ms(t_coder *ptr);
+void	*monitor(void *data);
 void	*routine(void *coder);
-int		create_threads(t_data *p, int i);
+int		compile(t_coder *p, t_data *t);
+
+int		print_report(t_coder *p, t_data *t);
+int		request_dongles(t_coder *cod, t_data *dat);
 
 /* ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug} 
 	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler} 

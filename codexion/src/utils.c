@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:41:18 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/05 05:57:02 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/11 19:24:43 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,22 @@ int	fill_struct(t_data *p)
 	p->coders = malloc(sizeof(t_coder) * (p->coders_num));
 	if (p->coders == NULL)
 		return (-1);
-	p->dongles = malloc(sizeof(pthread_mutex_t) * (p->coders_num));
-	if (p->dongles == NULL)
+	p->dongle = malloc(sizeof(t_dongle) * (p->coders_num));
+	if (p->dongle == NULL)
 		return (ft_free(p, -2));
-	while (i < p->coders_num)
+	while (++i < p->coders_num)
 	{
-		p->coders[i].data = p;
 		p->coders[i].id = i;
-		p->coders[i].left = &(p->dongles[i - 1]);
-		p->coders[i].right = &(p->dongles[i]);
-		i++;
+		p->coders[i].data = p;
+		p->dongle[i].state = READY;
+		p->coders[i].state = WAITING;
+		p->coders[i].right = &(p->dongle[i]);
+		p->coders[i].left = &(p->dongle[i - 1]);
+		p->coders[i].comp_todo = p->compile_req_num;
 	}
-	p->coders[1].left = &(p->dongles[p->coders_num - 1]);
+	p->dongle[0].state = READY;
+	p->print_mutex = (p->dongle[0].ptr);
+	p->coders[1].left = &(p->dongle[p->coders_num - 1]);
 	return (0);
 }
 
@@ -70,26 +74,57 @@ int	ft_free(t_data *p, int ex_code)
 		return (-1);
 	if (p->coders)
 		free(p->coders);
-	if (p->dongles)
-		free(p->dongles);
+	if (p->dongle)
+		free(p->dongle);
 	return (ex_code);
 }
 
-void	print_stuff(t_data *p)
+void	ft_destroy_join(t_data *p, int amount, char chr)
 {
-	int	i;
+	int	j;
 
-	i = 0;
-	while (++i < p->coders_num)
+	j = 0;
+	if (chr == 'M')
 	{
-		printf("ID:%zu; Dongle_L:%p;", p->coders[i].id, p->coders[i].left);
-		printf("Dongle_R:%p\n", p->coders[i].right);
+		while (j < amount)
+			pthread_mutex_destroy(&p->dongle[j++].ptr);
 	}
-	// printf("Coders_num: %zu;\n", p->coders_num);
-	// printf("Burnout_time: %zu;\n", p->burnout_time);
-	// printf("Compile_time: %zu;\n", p->compile_time);
-	// printf("Debugin_time: %zu;\n", p->debugin_time);
-	// printf("Refactor_time: %zu;\n", p->refactor_time);
-	// printf("Compile_req_num: %zu;\n", p->compile_req_num);
-	// printf("Dongle_cooldown: %zu\n", p->dongle_cooldown);
+	else if (chr == 'J')
+	{
+		while (j < amount)
+		{
+			p->coders[j].state = 0;
+			pthread_join(p->coders[j++].thread, NULL);
+		}
+		j = 0;
+		amount = p->coders_num;
+		while (j < amount)
+			pthread_mutex_destroy(&p->dongle[j++].ptr);
+	}
+	return ;
+}
+
+int	create_threads(t_data *p, int i)
+{
+	while (i < p->coders_num)
+	{
+		if (pthread_mutex_init(&p->dongle[i].ptr, NULL) != 0)
+		{
+			ft_destroy_join(p, i, 'M');
+			return (-1);
+		}
+		i++;
+	}
+	pthread_create(&p->coders[0].thread, NULL, &monitor, &p);
+	i = 1;
+	while (i < p->coders_num)
+	{
+		if (pthread_create(&p->coders[i].thread, NULL, &routine, &p->coders[i]))
+		{
+			ft_destroy_join(p, i, 'J');
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
 }
