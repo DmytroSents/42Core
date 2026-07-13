@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:27:41 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/11 19:27:55 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/13 06:19:33 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@
 # define READY 1
 # define ON_CD 0
 
+# define GREEN "\033[32m"
+# define RESET "\033[0m"
+# define BOLD_GREEN "\033[1;32m"
+
 typedef struct s_data	t_data;
 typedef struct s_coder	t_coder;
 typedef struct s_dongle	t_dongle;
@@ -42,7 +46,7 @@ typedef enum state
 struct s_dongle
 {
 	int				state;
-	pthread_mutex_t	*ptr;
+	pthread_mutex_t	ptr;
 	size_t			release_time;
 };
 
@@ -73,7 +77,7 @@ struct s_data
 	pthread_mutex_t	*print_mutex;
 };
 
-int		time_ms(t_coder *ptr);
+int		time_ms(t_coder *ptr, char *str);
 void	*monitor(void *data);
 void	*routine(void *coder);
 int		compile(t_coder *p, t_data *t);

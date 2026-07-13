@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:41:18 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/11 19:24:43 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/12 22:44:53 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	fill_struct(t_data *p)
 		p->coders[i].comp_todo = p->compile_req_num;
 	}
 	p->dongle[0].state = READY;
-	p->print_mutex = (p->dongle[0].ptr);
+	p->print_mutex = &(p->dongle[0].ptr);
 	p->coders[1].left = &(p->dongle[p->coders_num - 1]);
 	return (0);
 }

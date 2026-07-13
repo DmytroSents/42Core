@@ -1,3 +1,5 @@
+	SOURCE: https://sites.cs.ucsb.edu/~rich/class/cs170/notes/CondVar/index.html
+
 
 
 	https://www.youtube.com/watch?v=VSkvwzqo-Pk&t=178s
@@ -13,4 +15,5 @@
 >>If I have if (pthread_create(&p->coders[i].thread, NULL, &routine, &p->coders[i])) return (-1); --should I join them before exit() or not?
 >>Does an attempt to lock already locke mutex will cause a bug on undef-behavior?
 --This is exactly how mutexes are meant to be used. Trying to lock an already locked mutex does not cause undefined behavior
->>answer in one word: is a pointer to a function here: -mandatory; -good_fit; -non_neccessary_but_good_learning_experience?
+>>answer in one word: is a pointer to a function here: -mandatory; -good_fit; -not;
+--Good fit.

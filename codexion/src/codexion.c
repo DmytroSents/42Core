@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:12:17 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/11 16:40:09 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/07/13 05:56:32 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ int	main(int argc, char *argv[])
 	ft_errno = parse_args(argv, &p_tr, &ft_errno, 0);
 	if (ft_errno)
 		return (ft_errno);
+
 	if (fill_struct(&p_tr) < 0)
 		return (-1);
 
-	print_stuff(&p_tr);
-
 	if (create_threads(&p_tr, 0))
 		return (ft_free(&p_tr, -3));
+
+	//print_stuff(&p_tr);
 
 	ft_destroy_join(&p_tr, p_tr.coders_num, 'J');
 	return (ft_free(&p_tr, 0));
@@ -47,7 +48,7 @@ int	main(int argc, char *argv[])
 // it is scheduling access to each dongle.
 // policy decides which coder gets a dongle next.
 
-int	time_ms(t_coder *ptr)
+int	time_ms(t_coder *ptr, char *str)
 {
 	struct timeval	tv;
 
@@ -55,6 +56,8 @@ int	time_ms(t_coder *ptr)
 		return (-1);
 	ptr->elapsed = (size_t)tv.tv_sec * 1000;
 	ptr->elapsed += (size_t)tv.tv_usec / 1000;
+	if (str)
+		ptr->time_0 =(size_t)tv.tv_sec * 1000 + (size_t)tv.tv_usec / 1000;
 	return ((int)ptr->elapsed - ptr->time_0);
 }
 
@@ -62,12 +65,13 @@ void	print_stuff(t_data *p)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	while (++i < p->coders_num)
 	{
 		printf("ID:%zu; Dongle_L:%p;", p->coders[i].id, p->coders[i].left);
-		printf("Dongle_R:%p\n", p->coders[i].right);
+		printf("Dongle_R:%p;\n", p->coders[i].right);
 	}
+	printf("Print_Mutx:%p\n", p->print_mutex);
 	// printf("Coders_num: %zu;\n", p->coders_num);
 	// printf("Burnout_time: %zu;\n", p->burnout_time);
 	// printf("Compile_time: %zu;\n", p->compile_time);
