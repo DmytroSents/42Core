@@ -1,15 +1,16 @@
 
 NAME = codexion
 CC = cc
-CFLAGS = -pthread #-Wall -Wextra -Werror
+CFLAGS = -pthread 
+#	-Wall -Wextra -Werror	-fsanitize=thread
 
 SRC_DIR = src
 OBJ_DIR = obj
 INC_DIR = include
 
-SRCS =  $(SRC_DIR)/utils.c	 \
-		$(SRC_DIR)/codexion.c \
-		$(SRC_DIR)/routine.c
+SRCS =  $(SRC_DIR)/utils.c	$(SRC_DIR)/utils_2.c \
+	$(SRC_DIR)/codexion.c   $(SRC_DIR)/routine.c  \
+	$(SRC_DIR)/std_queue.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -33,3 +34,8 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+# ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug} 
+#	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler} 
+# valgrind --tool=helgrind ./codexion 6  1200  600  200  200  3  25  fifo
+#			valgrind --tool=drd

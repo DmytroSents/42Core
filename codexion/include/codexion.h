@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:27:41 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/07/13 06:19:33 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/08/06 21:34:16 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <pthread.h>
 # include "utils.h"
 # include <limits.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define READY 1
 # define ON_CD 0
@@ -43,28 +46,32 @@ typedef enum state
 	WAITING,
 }	t_state;
 
-struct s_dongle
+struct				s_dongle
 {
 	int				state;
 	pthread_mutex_t	ptr;
 	size_t			release_time;
 };
 
-struct s_coder
+struct				s_coder
 {
 	size_t			id;
 	t_data			*data;
 	int				state;
-	pthread_t		thread;
 	size_t			comp_todo;
 	t_dongle		*right;	
 	t_dongle		*left;
-	size_t			time_0;
+	pthread_t		thread;
+	pthread_mutex_t	mut_self;
 	size_t			elapsed;
+	size_t			last_compile;
+
 };
 
-struct s_data
+struct				s_data
 {
+	int				stop;
+	size_t			time_0;
 	t_coder			*coders;
 	t_dongle		*dongle;
 	size_t			coders_num;
@@ -74,16 +81,22 @@ struct s_data
 	size_t			refactor_time;
 	size_t			compile_req_num;
 	size_t			dongle_cooldown;
-	pthread_mutex_t	*print_mutex;
+	pthread_t		monitor;
+	char			*scheduler;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	monitor_mut;
+	pthread_cond_t	monitor_cond;
 };
 
-int		time_ms(t_coder *ptr, char *str);
 void	*monitor(void *data);
 void	*routine(void *coder);
 int		compile(t_coder *p, t_data *t);
 
-int		print_report(t_coder *p, t_data *t);
-int		request_dongles(t_coder *cod, t_data *dat);
+int		fill_struct(t_data *p);
+int		print_stuff(t_data *p, int error);
+int		parse_args(char *argv[], t_data	*p, int *ft_err, int i);
+
+int		request_dongles(t_coder *cod, t_data *dat); //???
 
 /* ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug} 
 	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler} 
