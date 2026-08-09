@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:40:28 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/08/05 20:10:54 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/08/09 20:04:35 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,11 @@ int		fifo_push(t_queue *qu, t_coder *p);
 int		edf_insert(t_queue *qu, t_coder *p);
 t_coder	*fifo_pop(t_queue *qu);
 t_coder	*edf_extract(t_queue *qu);
+t_coder	*queue_peek(t_queue *qu, char *schedul);
 
 int		ft_free(t_data *p, t_queue *q, int ex_code);
 
 int		create_threads(t_data *p, int i);
-int		ft_destroy_join(t_data *p, int amount, char chr);
-
-int		print_report(t_coder *p, t_data *t, char dg);
+int		ft_destroy_join(t_data *p, int amount, char chr, int j);
 
 #endif

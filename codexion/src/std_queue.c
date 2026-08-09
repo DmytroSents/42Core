@@ -6,26 +6,19 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 13:02:07 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/08/06 18:32:28 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/08/09 19:33:00 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-int	queue_init(t_data *p, t_queue *q)
+t_coder	*queue_peek(t_queue *qu, char *schedul)
 {
-	if (!q || !p)
-		return (0);
-	q->arr = NULL;
-	q->arr = (t_coder **)malloc((p->coders_num) * sizeof(t_coder *));
-	// memset 0
-	if (!q->arr)
-		return (-1);
-	q->rear = 0;
-	q->count = 0;
-	q->front = 0;
-	q->capacity = p->coders_num;
-	return (0);
+	if (!qu || qu->count == 0)
+		return (NULL);
+	if (strcmp(schedul, "fifo") == 0)
+		return (qu->arr[qu->front]);
+	return (qu->arr[0]);
 }
 
 t_coder	*fifo_pop(t_queue *qu)
@@ -75,7 +68,7 @@ int	edf_insert(t_queue *qu, t_coder *p)
 	while (current)
 	{
 		parent = (current - 1) / 2;
-		if (qu->arr[current]->last_compile < qu->arr[parent]->last_compile)
+		if (qu->arr[current]->deadline < qu->arr[parent]->deadline)
 		{
 			temp = qu->arr[parent];
 			qu->arr[parent] = qu->arr[current];
@@ -109,9 +102,9 @@ t_coder	*edf_extract(t_queue *qu)
 	{
 		child = (i * 2) + 1;
 		if (child + 1 < qu->count
-			&& qu->arr[child + 1]->last_compile < qu->arr[child]->last_compile)
+			&& qu->arr[child + 1]->deadline < qu->arr[child]->deadline)
 			child++;
-		if (qu->arr[i]->last_compile <= qu->arr[child]->last_compile)
+		if (qu->arr[i]->deadline <= qu->arr[child]->deadline)
 			break ;
 		tmp = qu->arr[i];
 		qu->arr[i] = qu->arr[child];

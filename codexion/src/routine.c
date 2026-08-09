@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/11 10:56:11 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/08/06 18:59:48 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/08/09 20:59:23 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,16 @@ void	*routine(void *coder)
 	t_coder	*p;
 
 	p = (t_coder *)coder;
-	pthread_mutex_lock(&p->data->print_mutex);
-	pthread_mutex_unlock(&p->data->print_mutex);
-	p->last_compile = p->data->time_0;
-	while (p->state && p->comp_todo)
+	while (!p->data->stop && p->comp_todo)
 	{
-		// while (!request_dongles(p, p->data))
-		// 	 ;
+		if (request_dongles(p, p->data) < 0)
+			break ;
 		compile(p, p->data);
 		if (p->comp_todo == 0)
 		{
 			pthread_mutex_lock(&p->data->print_mutex);
-			printf("%zums " GREEN "%zu " RESET "has ", time_ms(p, 0), p->id);
-			printf(GREEN "finished " RESET "simulation\n");
+			printf("%zums " GREEN "%zu " RESET "has", time_ms(p, 0), p->id + 1);
+			printf(GREEN " finished " RESET "simulation\n");
 			pthread_mutex_unlock(&p->data->print_mutex);
 			break ;
 		}
@@ -54,11 +51,15 @@ void	*routine(void *coder)
 		pthread_mutex_unlock(&p->mut_self);
 		print_report(p, p->data, 0);
 		usleep((p->data->debugin_time) * 1000);
+		if (p->data->stop)
+			break ;
 		pthread_mutex_lock(&p->mut_self);
 		p->state = REFACTOR;
 		pthread_mutex_unlock(&p->mut_self);
 		print_report(p, p->data, 0);
 		usleep((p->data->refactor_time) * 1000);
+		if (p->data->stop)
+			break ;
 		pthread_mutex_lock(&p->mut_self);
 		p->state = WAITING;
 		pthread_mutex_unlock(&p->mut_self);
@@ -68,19 +69,20 @@ void	*routine(void *coder)
 
 int	compile(t_coder *p, t_data *t)
 {
-	pthread_mutex_lock(&p->left->ptr);
 	print_report(p, t, 'L');
-	pthread_mutex_lock(&p->right->ptr);
 	print_report(p, t, 'R');
-	time_ms(p, "last_");
+	pthread_mutex_lock(&t->monitor_mut);
+	p->previos_compile = (size_t)time_ms(p, "last_");
+	pthread_mutex_unlock(&t->monitor_mut);
 	pthread_mutex_lock(&p->mut_self);
 	p->state = COMPILNG;
 	pthread_mutex_unlock(&p->mut_self);
 	print_report(p, t, 0);
 	usleep((p->data->compile_time) * 1000);
+	pthread_mutex_lock(&t->monitor_mut);
 	p->comp_todo = p->comp_todo - 1;
-	pthread_mutex_unlock(&p->left->ptr);
-	pthread_mutex_unlock(&p->right->ptr);
+	pthread_mutex_unlock(&t->monitor_mut);
+	release_dongles(p, t);
 	return (0);
 }
 
@@ -92,7 +94,7 @@ int	print_report(t_coder *p, t_data *t, char dg)
 	i = -1;
 	pthread_mutex_lock(&p->mut_self);
 	print_state = p->state;
-	pthread_mutex_unlock(&p->mut_self);	
+	pthread_mutex_unlock(&p->mut_self);
 	pthread_mutex_lock(&t->print_mutex);
 	if (print_state == BURNOUT)
 		i = printf("%zu_ms %zu burned out\n", time_ms(p, 0), p->id + 1);
@@ -108,10 +110,29 @@ int	print_report(t_coder *p, t_data *t, char dg)
 	return (i);
 }
 
-void	*monitor(void *data)
+int	request_dongles(t_coder *coder, t_data *p)
 {
-	t_data	*ptr;
+	pthread_mutex_lock(&p->monitor_mut);
+	coder->permision = 0;
+	coder->deadline = coder->previos_compile + p->burnout_time;
+	p->ready_q->push(p->ready_q, coder);
+	while (!coder->permision && !p->stop)
+		pthread_cond_wait(&coder->permi_cond, &p->monitor_mut);
+	if (p->stop)
+	{
+		pthread_mutex_unlock(&p->monitor_mut);
+		return (-1);
+	}
+	pthread_mutex_unlock(&p->monitor_mut);
+	return (0);
+}
 
-	ptr = (t_data *)data;
-	return (NULL);
+void	release_dongles(t_coder *coder, t_data *p)
+{
+	pthread_mutex_lock(&p->monitor_mut);
+	coder->left->state = COOLDOWN;
+	coder->left->release_time = (size_t)time_ms(NULL, "start") - p->time_0;
+	coder->right->state = COOLDOWN;
+	coder->right->release_time = (size_t)time_ms(NULL, "start") - p->time_0;
+	pthread_mutex_unlock(&p->monitor_mut);
 }

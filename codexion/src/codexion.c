@@ -6,7 +6,7 @@
 /*   By: dbrusent <dbrusent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/28 02:12:17 by dbrusent          #+#    #+#             */
-/*   Updated: 2026/08/06 18:51:18 by dbrusent         ###   ########.fr       */
+/*   Updated: 2026/08/09 20:33:23 by dbrusent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ int	main(int argc, char *argv[])
 		return (-1);
 	if (queue_init(&p_tr, &my_q) < 0)
 		return (ft_free(&p_tr, NULL, -2));
+	p_tr.ready_q = &my_q;
+	p_tr.time_0 = time_ms(NULL, "start");
 	if (create_threads(&p_tr, 0))
 		return (ft_free(&p_tr, &my_q, -3));
-	ft_destroy_join(&p_tr, p_tr.coders_num, 'J');
+	ft_destroy_join(&p_tr, p_tr.coders_num, 'J', 0);
 	return (ft_free(&p_tr, &my_q, 0));
 }
 
@@ -84,6 +86,7 @@ int	fill_struct(t_data *p)
 		p->coders[i].right = &(p->dongle[i]);
 		p->coders[i].left = &(p->dongle[i - 1]);
 		p->coders[i].comp_todo = p->compile_req_num;
+		p->coders[i].previos_compile = 0;
 	}
 	p->coders[0].left = &(p->dongle[p->coders_num - 1]);
 	return (0);
@@ -105,12 +108,13 @@ int	print_stuff(t_data *p, int error)
 		printf("Dongle_R:%p;\n", p->coders[i].right);
 	}
 	printf("Print_Mutx:%p\n", &p->print_mutex);
-	// printf("Coders_num: %zu;\n", p->coders_num);
+	return (0);
+}
+
+/*	// printf("Coders_num: %zu;\n", p->coders_num);
 	// printf("Burnout_time: %zu;\n", p->burnout_time);
 	// printf("Compile_time: %zu;\n", p->compile_time);
 	// printf("Debugin_time: %zu;\n", p->debugin_time);
 	// printf("Refactor_time: %zu;\n", p->refactor_time);
 	// printf("Compile_req_num: %zu;\n", p->compile_req_num);
-	// printf("Dongle_cooldown: %zu\n", p->dongle_cooldown);
-	return (0);
-}
+	// printf("Dongle_cooldown: %zu\n", p->dongle_cooldown);*/

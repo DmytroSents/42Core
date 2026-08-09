@@ -10,7 +10,7 @@ INC_DIR = include
 
 SRCS =  $(SRC_DIR)/utils.c	$(SRC_DIR)/utils_2.c \
 	$(SRC_DIR)/codexion.c   $(SRC_DIR)/routine.c  \
-	$(SRC_DIR)/std_queue.c
+	$(SRC_DIR)/std_queue.c	$(SRC_DIR)/monitor.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
