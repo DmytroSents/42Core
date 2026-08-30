@@ -39,11 +39,26 @@ void	*monitor(void *data)
 	return (NULL);
 }
 
-static void	scheduler_grant(t_data *data, t_coder **batch, size_t total)
+void	scheduler(t_data *data, size_t now, size_t i, size_t total)
 {
-	size_t	n;
 	t_coder	*mayb_next;
+	t_coder	**batch;
+	size_t	n;
 
+	while (i < data->coders_num)
+	{
+		if (data->dongle[i].state == COOLDOWN
+			&& now - data->dongle[i].release_time >= data->dongle_cooldown)
+			data->dongle[i].state = READY;
+		i++;
+	}
+	total = data->ready_q->count;
+	batch = (t_coder **)malloc(sizeof(t_coder *) * (total ? total : 1));
+	if (!batch)
+		return ;
+	n = 0;
+	while (n < total)
+		batch[n++] = data->ready_q->pop(data->ready_q);
 	n = 0;
 	while (n < total)
 	{
@@ -60,30 +75,6 @@ static void	scheduler_grant(t_data *data, t_coder **batch, size_t total)
 		else
 			data->ready_q->push(data->ready_q, mayb_next);
 	}
-}
-
-void	scheduler(t_data *data, size_t now, size_t i, size_t total)
-{
-	t_coder	**batch;
-	size_t	n;
-
-	while (i < data->coders_num)
-	{
-		if (data->dongle[i].state == COOLDOWN
-			&& now - data->dongle[i].release_time >= data->dongle_cooldown)
-			data->dongle[i].state = READY;
-		i++;
-	}
-	total = data->ready_q->count;
-	if (total == 0)
-		return ;
-	batch = (t_coder **)malloc(sizeof(t_coder *) * total);
-	if (!batch)
-		return ;
-	n = 0;
-	while (n < total)
-		batch[n++] = data->ready_q->pop(data->ready_q);
-	scheduler_grant(data, batch, total);
 	free(batch);
 }
 
@@ -98,8 +89,8 @@ int	check_burnout(t_data *data, size_t now, size_t i, int done)
 			pthread_mutex_lock(&data->coders[i].mut_self);
 			data->coders[i].state = BURNOUT;
 			pthread_mutex_unlock(&data->coders[i].mut_self);
-			data->stop = 1;
 			print_report(&data->coders[i], data, 0);
+			data->stop = 1;
 			broadcast_all(data);
 			return (1);
 		}

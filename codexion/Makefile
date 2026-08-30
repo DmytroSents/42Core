@@ -1,8 +1,7 @@
 
 NAME = codexion
 CC = cc
-CFLAGS = -pthread 
-#	-Wall -Wextra -Werror	-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -35,7 +34,7 @@ re: fclean all
 
 .PHONY: all clean fclean re
 
-# ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug} 
-#	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler} 
+# ./codexion {num_coders} {time2_burnout} {time2_compile} {time2_debug}
+#	{time2_refactor} {num_compiles_req} {dongle_cooldown} {scheduler}
 # valgrind --tool=helgrind ./codexion 6  1200  600  200  200  3  25  fifo
 #			valgrind --tool=drd

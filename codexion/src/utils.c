@@ -53,7 +53,7 @@ ssize_t	time_ms(t_coder *ptr, char *str)
 	return ((ssize_t)(absolute - ptr->data->time_0));
 }
 
-int	ft_destroy_join(t_data *p, int amount, char chr, int j)
+int	ft_destroy_join(t_data *p, size_t amount, char chr, size_t j)
 {
 	if (chr == 'M')
 	{
@@ -67,21 +67,22 @@ int	ft_destroy_join(t_data *p, int amount, char chr, int j)
 	{
 		while (j < amount)
 			pthread_join(p->coders[j++].thread, NULL);
+		pthread_join(p->monitor, NULL);
 		j = 0;
 		amount = p->coders_num;
+		while (j < amount)
 		{
 			pthread_cond_destroy(&p->coders[j].permi_cond);
 			pthread_mutex_destroy(&p->coders[j++].mut_self);
 		}
 	}
-	pthread_join(p->monitor, NULL);
 	pthread_mutex_destroy(&p->monitor_mut);
 	pthread_cond_destroy(&p->monitor_cond);
 	pthread_mutex_destroy(&p->print_mutex);
 	return (-1);
 }
 
-int	create_threads(t_data *p, int i)
+int	create_threads(t_data *p, size_t i)
 {
 	pthread_mutex_init(&p->monitor_mut, NULL);
 	pthread_cond_init(&p->monitor_cond, NULL);
